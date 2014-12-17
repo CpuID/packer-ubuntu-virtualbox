@@ -27,6 +27,7 @@ The result here will be a Vagrant Box file that can be added to Vagrant using:
 
 ```bash
 vagrant box add TODO-filename
+```
 
 # Customizing your Vagrant Boxes
 
