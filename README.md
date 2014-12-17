@@ -9,14 +9,17 @@ and pass it to packer.
 
 # Prerequisites
 
-These scripts assume you have the below installed:
+These scripts assume you have the below available/installed:
 
+- Bash (3.x upwards)
 - Packer (tested on 0.7.5 / OSX)
 - VirtualBox (tested on 4.3.20 / OSX)
 
 And to test boxes:
 
 - Vagrant (tested on 1.7.1 / OSX)
+
+My testing was done on OSX 10.9.5, but the logic should work on most operating systems. Unsure about Windows mainly due to paths though.
 
 # Quick-Start Guide
 
