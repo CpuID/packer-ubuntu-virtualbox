@@ -7,6 +7,8 @@ Both stages have wrapper shell scripts, for the ISO to OVF stage this is to set 
 before kicking off packer. For the OVF to Vagrant Box stage, we find the most recent OVF in the directory
 and pass it to packer.
 
+By default these scripts will build for Ubuntu Precise 12.04, see below for details on building other versions.
+
 # Prerequisites
 
 These scripts assume you have the below available/installed:
@@ -42,6 +44,10 @@ The result here will be a Vagrant Box file that can be added to Vagrant using:
 ```bash
 vagrant box add TODO-filename
 ```
+
+# Changing Ubuntu Version
+
+You can modify the versions specified at the top of start_iso_to_ovf.sh to build for Trusty or any other versions accordingly.
 
 # Customizing your Vagrant Boxes
 
