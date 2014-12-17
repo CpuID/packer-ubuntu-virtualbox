@@ -6,10 +6,10 @@ set -x
 set -e
 
 cat > "/etc/apt/sources.list" << EOF
-deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY precise main restricted universe multiverse
-deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY precise-updates main restricted universe multiverse
-deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY precise-backports main restricted universe multiverse
-deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY precise-security main restricted universe multiverse
+deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY MIRROR_SUITE main restricted universe multiverse
+deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY MIRROR_SUITE-updates main restricted universe multiverse
+deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY MIRROR_SUITE-backports main restricted universe multiverse
+deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY MIRROR_SUITE-security main restricted universe multiverse
 EOF
 
 # Perform an update and full upgrade.
