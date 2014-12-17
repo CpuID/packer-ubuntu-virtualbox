@@ -1,0 +1,39 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+      "source_path": "./output-virtualbox-iso/packer-virtualbox-iso-1418790095.ovf",
+  		"ssh_username": "vagrant",
+  		"ssh_password": "vagrant",
+  		"ssh_wait_timeout": "60s",
+  		"shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "2048"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "4"
+        ]
+      ],
+      "virtualbox_version_file": ".vbox_version"
+    }
+  ],
+  "post-processors": [
+    "vagrant"
+  ],
+  "provisioners": [
+    {
+      "scripts": [
+        "scripts/ubuntu_box_setup.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}
+
