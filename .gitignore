@@ -1,3 +1,4 @@
-http/preseed.cfg
-ubuntu_iso_to_ovf.json
-ubuntu_ovf_to_box.json
+/http/preseed.cfg
+/ubuntu_iso_to_ovf.json
+/ubuntu_ovf_to_box.json
+/packer_cache/*
