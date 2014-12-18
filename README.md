@@ -25,7 +25,9 @@ My testing was done on OSX 10.9.5, but the logic should work on most operating s
 
 # Quick-Start Guide
 
-The below will pick the first mirror from mirrors.ubuntu.com/mirrors.txt and inject it:
+Create a file called cdimages_mirror.txt in this directory, copy one of the 'http' links from https://launchpad.net/ubuntu/+cdmirrors. Use a trailing slash and make it a one line file.
+
+Then, run the below, which will pick the first mirror from mirrors.ubuntu.com/mirrors.txt, inject it and start packer:
 
 ```bash
 ./start_iso_to_ovf.sh
@@ -33,16 +35,16 @@ The below will pick the first mirror from mirrors.ubuntu.com/mirrors.txt and inj
 
 The result of the above will be a directory called output-virtualbox-iso/ containing a .ovf and .vmdk file.
 
-Next, by running:
+Next start building a Vagrant Box by running:
 
 ```bash
 ./start_ovf_to_box.sh
 ```
 
-The result here will be a Vagrant Box file that can be added to Vagrant using:
+It will use the latest generated OVF file in the above output directory. The result here will be a Vagrant Box file that can be added to Vagrant using:
 
 ```bash
-vagrant box add TODO-filename
+vagrant box add packer_virtualbox-ovf_virtualbox.box
 ```
 
 # Changing Ubuntu Version
