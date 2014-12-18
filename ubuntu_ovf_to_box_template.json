@@ -3,10 +3,10 @@
     {
       "type": "virtualbox-ovf",
       "source_path": "UBUNTU_OVF_FILENAME",
-  		"ssh_username": "vagrant",
-  		"ssh_password": "vagrant",
-  		"ssh_wait_timeout": "60s",
-  		"shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "60s",
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
       "vboxmanage": [
         [
           "modifyvm",
