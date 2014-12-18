@@ -91,4 +91,6 @@ perl -pi -e "s|ISO_CHECKSUM|${iso_checksum_value}|g" ubuntu_iso_to_ovf.json
 # Run packer.
 packer build ubuntu_iso_to_ovf.json
 
+set +x
+
 echo "Completed at $(date)"
