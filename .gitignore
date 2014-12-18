@@ -1,7 +1,9 @@
 /cdimages_mirror.txt
+/cdimages_SHA1SUMS
 /mirrors.txt
 /http/preseed.cfg
 /ubuntu_iso_to_ovf.json
 /ubuntu_ovf_to_box.json
 /scripts/ubuntu_ovf_setup_1.sh
 /packer_cache/*
+/output-virtualbox-iso/*

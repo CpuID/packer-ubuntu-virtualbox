@@ -20,6 +20,8 @@ ubuntu_mirror=""
 
 #############
 
+echo "Started at $(date)"
+
 if [ ! -f "cdimages_mirror.txt" ]; then
 	echo "You must create a file called 'cdimages_mirror.txt' in this directory, with a mirror from:"
 	echo "https://launchpad.net/ubuntu/+cdmirrors"
@@ -62,8 +64,6 @@ echo "Host: ${mirror_host}"
 echo "Path: ${mirror_path}"
 echo ""
 
-exit 0
-
 set -x
 
 # Substitute values as required.
@@ -83,12 +83,12 @@ ubuntu_iso_filename="ubuntu-${ubuntu_version_full}-server-amd64.iso"
 perl -pi -e "s|ISO_URL|${ubuntu_cd_mirror}${ubuntu_version_short}/${ubuntu_iso_filename}|g" ubuntu_iso_to_ovf.json
 
 # ISO Checksum. Use an upstream trusted source rather than a mirror for this part.
-sha1sums_filename="SHA1SUMS"
-wget -O "${local_sha1sums_filename}" "http://releases.ubuntu.com/${ubuntu_version_short}/${sha1sums_filename}"
+sha1sums_filename="cdimages_SHA1SUMS"
+wget -q -O "${sha1sums_filename}" "http://releases.ubuntu.com/${ubuntu_version_short}/${sha1sums_filename}"
 iso_checksum_value=$(grep "${ubuntu_iso_filename}" "${sha1sums_filename}" | cut -d" " -f1)
 perl -pi -e "s|ISO_CHECKSUM|${iso_checksum_value}|g" ubuntu_iso_to_ovf.json
 
-exit 0
-
 # Run packer.
 packer build ubuntu_iso_to_ovf.json
+
+echo "Completed at $(date)"
