@@ -91,6 +91,11 @@ wget -q -O "${sha1sums_filename}" "http://releases.ubuntu.com/${ubuntu_version_s
 iso_checksum_value=$(grep "${ubuntu_iso_filename}" "${sha1sums_filename}" | cut -d" " -f1)
 perl -pi -e "s|ISO_CHECKSUM|${iso_checksum_value}|g" ubuntu_iso_to_ovf.json
 
+# Delete existing packer output directory, otherwise packer fails.
+if [ -d "output-virtualbox-iso" ]; then
+	rm -rf "output-virtualbox-iso"
+fi
+
 # Run packer.
 packer build ubuntu_iso_to_ovf.json
 
