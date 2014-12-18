@@ -9,6 +9,11 @@ and pass it to packer.
 
 By default these scripts will build for Ubuntu Precise 12.04, see below for details on building other versions.
 
+# Motive
+
+This repo exists primarily due to VirtualBox not accepting the Ubuntu provided OVF files, issue documented at https://github.com/mitchellh/packer/issues/1726
+The implementation here works around the issue.
+
 # Prerequisites
 
 These scripts assume you have the below available/installed:
