@@ -14,10 +14,28 @@ ubuntu_version_codename="precise"
 #ubuntu_version_codename="trusty"
 
 # Explicit mirror selection (see commented example for format).
+# Packages
 ubuntu_mirror=""
 #ubuntu_mirror="http://mirror.internode.on.net/pub/ubuntu/ubuntu/"
 
 #############
+
+if [ ! -f "cdimages_mirror.txt" ]; then
+	echo "You must create a file called 'cdimages_mirror.txt' in this directory, with a mirror from:"
+	echo "https://launchpad.net/ubuntu/+cdmirrors"
+	echo "The file should contain a single line, of the URI of the 'http' link next to any mirror on the page above."
+	echo "Include the trailing slash, example:"
+	echo "http://mirror.internode.on.net/pub/ubuntu/releases/"
+	exit 1
+fi
+ubuntu_cd_mirror=$(cat "cdimages_mirror.txt")
+cd_mirror_proto="$(echo $ubuntu_cd_mirror | grep :// | sed -e's,^\(.*://\).*,\1,g')"
+if [[ "$cd_mirror_proto" != "http://" && "$cd_mirror_proto" != "https://" ]]; then
+	echo "Error - Invalid format for 'cdimages_mirror.txt' file, it must contain a single line"
+	echo "with a URL prefix, example:"
+	echo "http://mirror.internode.on.net/pub/ubuntu/releases/"
+	exit 1
+fi
 
 # Pick a mirror, if none has already ben specified.
 if [ -z "$ubuntu_mirror" ]; then
@@ -59,11 +77,18 @@ perl -pi -e "s|MIRROR_HOSTNAME|${mirror_host}|g" scripts/ubuntu_ovf_setup_1.sh
 perl -pi -e "s|MIRROR_DIRECTORY|${mirror_path}|g" scripts/ubuntu_ovf_setup_1.sh
 perl -pi -e "s|MIRROR_SUITE|${ubuntu_version_codename}|g" scripts/ubuntu_ovf_setup_1.sh
 
+# ISO URL.
 cp ubuntu_iso_to_ovf_template.json ubuntu_iso_to_ovf.json
-# TODO - substitute url below
-perl -pi -e "s|MIRROR_URL|http://mirror.internode.on.net/pub/ubuntu/releases/12.04/ubuntu-12.04.4-server-amd64.iso|g" ubuntu_iso_to_ovf.json
+ubuntu_iso_filename="ubuntu-${ubuntu_version_full}-server-amd64.iso"
+perl -pi -e "s|ISO_URL|${ubuntu_cd_mirror}${ubuntu_version_short}/${ubuntu_iso_filename}|g" ubuntu_iso_to_ovf.json
 
-# TODO - get SHA1 hash and substitute in JSON file for relevant iso.
+# ISO Checksum. Use an upstream trusted source rather than a mirror for this part.
+sha1sums_filename="SHA1SUMS"
+wget -O "${local_sha1sums_filename}" "http://releases.ubuntu.com/${ubuntu_version_short}/${sha1sums_filename}"
+iso_checksum_value=$(grep "${ubuntu_iso_filename}" "${sha1sums_filename}" | cut -d" " -f1)
+perl -pi -e "s|ISO_CHECKSUM|${iso_checksum_value}|g" ubuntu_iso_to_ovf.json
+
+exit 0
 
 # Run packer.
 packer build ubuntu_iso_to_ovf.json
