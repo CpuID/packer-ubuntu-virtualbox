@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+# This wrapper script sets our Ubuntu versions and mirrors correctly before starting packer.
+
 set -e
 
-# This wrapper script sets our Ubuntu versions and mirrors correctly before starting packer.
+#############
+# Configuration
 
 # Precise
 ubuntu_version_full="12.04.4"

@@ -2,7 +2,7 @@
   "builders": [
     {
       "type": "virtualbox-ovf",
-      "source_path": "./output-virtualbox-iso/packer-virtualbox-iso-1418790095.ovf",
+      "source_path": "UBUNTU_OVF_FILENAME",
   		"ssh_username": "vagrant",
   		"ssh_password": "vagrant",
   		"ssh_wait_timeout": "60s",
