@@ -7,3 +7,4 @@
 /scripts/ubuntu_ovf_setup_1.sh
 /packer_cache/*
 /output-virtualbox-iso/*
+/output-virtualbox-ovf/*
