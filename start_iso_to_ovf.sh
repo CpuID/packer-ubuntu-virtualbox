@@ -8,7 +8,7 @@ set -e
 # Configuration
 
 # Precise
-ubuntu_version_full="12.04.4"
+ubuntu_version_full="12.04.5"
 ubuntu_version_short="12.04"
 ubuntu_version_codename="precise"
 # Trusty
