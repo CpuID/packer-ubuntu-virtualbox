@@ -8,13 +8,13 @@ set -e
 # Configuration
 
 # Precise
-ubuntu_version_full="12.04.5"
-ubuntu_version_short="12.04"
-ubuntu_version_codename="precise"
+#ubuntu_version_full="12.04.5"
+#ubuntu_version_short="12.04"
+#ubuntu_version_codename="precise"
 # Trusty
-#ubuntu_version_full="14.04.2"
-#ubuntu_version_short="14.04"
-#ubuntu_version_codename="trusty"
+ubuntu_version_full="14.04.3"
+ubuntu_version_short="14.04"
+ubuntu_version_codename="trusty"
 
 # Explicit mirror selection (see commented example for format).
 # Packages
