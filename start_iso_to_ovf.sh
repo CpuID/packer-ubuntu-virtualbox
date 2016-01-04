@@ -12,7 +12,7 @@ ubuntu_version_full="12.04.5"
 ubuntu_version_short="12.04"
 ubuntu_version_codename="precise"
 # Trusty
-#ubuntu_version_full="14.04.1"
+#ubuntu_version_full="14.04.2"
 #ubuntu_version_short="14.04"
 #ubuntu_version_codename="trusty"
 
