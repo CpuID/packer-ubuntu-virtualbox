@@ -9,3 +9,6 @@
 /output-virtualbox-iso/*
 /output-virtualbox-ovf/*
 /packer_virtualbox-ovf_virtualbox.box
+.idea
+.vagrant
+Vagrantfile

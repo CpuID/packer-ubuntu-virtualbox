@@ -2,26 +2,38 @@
 
 # This wrapper script sets our Ubuntu versions and mirrors correctly before starting packer.
 
-set -e
-
 #############
 # Configuration
-
-# Precise
-#ubuntu_version_full="12.04.5"
-#ubuntu_version_short="12.04"
-#ubuntu_version_codename="precise"
-# Trusty
-ubuntu_version_full="14.04.3"
-ubuntu_version_short="14.04"
-ubuntu_version_codename="trusty"
-
 # Explicit mirror selection (see commented example for format).
 # Packages
 ubuntu_mirror=""
 #ubuntu_mirror="http://mirror.internode.on.net/pub/ubuntu/ubuntu/"
-
 #############
+
+set -e
+
+case $1 in
+"precise"*)
+    ubuntu_version_full="12.04.5"
+    ubuntu_version_short="12.04"
+    ubuntu_version_codename="precise"
+  ;;
+"trusty"*)
+    ubuntu_version_full="14.04.5"
+    ubuntu_version_short="14.04"
+    ubuntu_version_codename="trusty"
+  ;;
+"xenial"*)
+    ubuntu_version_full="16.04.1"
+    ubuntu_version_short="16.04"
+    ubuntu_version_codename="xenial"
+  ;;
+  *)
+    echo "usage: $0 [precise|trusty|xenial]"
+    exit 1
+  ;;
+esac
+
 
 echo "Started at $(date)"
 
@@ -70,7 +82,7 @@ echo ""
 set -x
 
 # Substitute values as required.
-cp http/preseed_template.cfg http/preseed.cfg
+cp http/${ubuntu_version_codename}_preseed_template.cfg http/preseed.cfg
 perl -pi -e "s|MIRROR_HOSTNAME|${mirror_host}|g" http/preseed.cfg
 perl -pi -e "s|MIRROR_DIRECTORY|${mirror_path}|g" http/preseed.cfg
 perl -pi -e "s|MIRROR_SUITE|${ubuntu_version_codename}|g" http/preseed.cfg
@@ -84,6 +96,8 @@ perl -pi -e "s|MIRROR_SUITE|${ubuntu_version_codename}|g" scripts/ubuntu_ovf_set
 cp ubuntu_iso_to_ovf_template.json ubuntu_iso_to_ovf.json
 ubuntu_iso_filename="ubuntu-${ubuntu_version_full}-server-amd64.iso"
 perl -pi -e "s|ISO_URL|${ubuntu_cd_mirror}${ubuntu_version_short}/${ubuntu_iso_filename}|g" ubuntu_iso_to_ovf.json
+bootcommand=$(cat scripts/${ubuntu_version_codename}.boot_command)
+perl -pi -e "s|BOOTCOMMAND|${bootcommand}|g" ubuntu_iso_to_ovf.json
 
 # ISO Checksum. Use an upstream trusted source rather than a mirror for this part.
 sha1sums_filename="cdimages_SHA1SUMS"
