@@ -24,7 +24,7 @@ case $1 in
     ubuntu_version_codename="trusty"
   ;;
 "xenial"*)
-    ubuntu_version_full="16.04.1"
+    ubuntu_version_full="16.04.3"
     ubuntu_version_short="16.04"
     ubuntu_version_codename="xenial"
   ;;
