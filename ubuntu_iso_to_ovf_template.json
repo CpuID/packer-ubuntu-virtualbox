@@ -40,6 +40,7 @@
           "execute_command": "echo 'vagrant' | sudo -S sh '{{ .Path }}'"
         }
       },
+      "expect_disconnect": true,
       "scripts": [
         "scripts/ubuntu_ovf_setup_1.sh"
       ],
