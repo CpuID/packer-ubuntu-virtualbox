@@ -13,6 +13,7 @@ deb http://MIRROR_HOSTNAMEMIRROR_DIRECTORY MIRROR_SUITE-security main restricted
 EOF
 
 # Perform an update and full upgrade.
+sudo rm -rf /var/lib/apt/lists/*
 apt-get update
 apt-get -y --force-yes dist-upgrade
 
@@ -35,6 +36,13 @@ chsh -s $(which bash) root
 # Swap eth0 for eth1 so it boots a bit cleaner.
 #sed -i -e 's/eth0/eth1/' /etc/network/interfaces
 # Cleaner network setup? test it.
+
+#use old style interface names
+if [ $(lsb_release -c -s) == "xenial" ]
+then
+    ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
+fi
+
 cat > "/etc/network/interfaces" << EOF
 # Loopback
 auto lo

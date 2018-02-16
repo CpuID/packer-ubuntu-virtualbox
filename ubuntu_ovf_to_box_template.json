@@ -2,6 +2,7 @@
   "builders": [
     {
       "type": "virtualbox-ovf",
+      "headless": true,
       "source_path": "UBUNTU_OVF_FILENAME",
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
@@ -33,6 +34,12 @@
         "scripts/ubuntu_box_setup.sh"
       ],
       "type": "shell"
+    }, {
+      "type": "shell",
+      "scripts": [
+        "scripts/cleanup.sh",
+        "scripts/minimize.sh"
+      ]
     }
   ]
 }
