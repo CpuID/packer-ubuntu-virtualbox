@@ -5,6 +5,8 @@
       "boot_wait": "4s",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "guest_os_type": "Ubuntu_64",
+      "hard_drive_interface": "sata",
+      "sata_port_count": "8",
       "headless": true,
       "http_directory": "http",
       "iso_checksum": "ISO_CHECKSUM",
@@ -27,7 +29,7 @@
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "4"
+          "2"
         ]
       ],
       "virtualbox_version_file": ".vbox_version"
