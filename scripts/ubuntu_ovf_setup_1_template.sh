@@ -18,7 +18,8 @@ apt-get update
 apt-get -y --force-yes dist-upgrade
 
 # Install necessary libraries for guest additions and Vagrant NFS Share
-apt-get install -y --force-yes linux-headers-$(uname -r) build-essential dkms nfs-common
+# Also install curl, comes with most "cloud images" distributed by Ubuntu by default
+apt-get install -y --force-yes build-essential curl dkms linux-headers-$(uname -r) nfs-common
 
 # Setup sudo to allow no-password sudo for "admin"
 groupadd -r admin
@@ -38,9 +39,9 @@ chsh -s $(which bash) root
 # Cleaner network setup? test it.
 
 #use old style interface names
-if [ $(lsb_release -c -s) == "xenial" ]
+if [ "$(lsb_release -c -s)" == "xenial" ]
 then
-    ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
+  ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 fi
 
 cat > "/etc/network/interfaces" << EOF
