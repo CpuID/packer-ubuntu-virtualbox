@@ -98,6 +98,7 @@ ubuntu_iso_filename="ubuntu-${ubuntu_version_full}-server-amd64.iso"
 perl -pi -e "s|ISO_URL|${ubuntu_cd_mirror}${ubuntu_version_short}/${ubuntu_iso_filename}|g" ubuntu_iso_to_ovf.json
 bootcommand=$(cat scripts/${ubuntu_version_codename}.boot_command)
 perl -pi -e "s|BOOTCOMMAND|${bootcommand}|g" ubuntu_iso_to_ovf.json
+perl -pi -e "s|UBUNTU_VERSION_FULL|${ubuntu_version_full}|g" ubuntu_iso_to_ovf.json
 
 # ISO Checksum. Use an upstream trusted source rather than a mirror for this part.
 sha1sums_filename="cdimages_SHA1SUMS"
