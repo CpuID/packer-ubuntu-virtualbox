@@ -35,8 +35,10 @@ Create a file called cdimages_mirror.txt in this directory, copy one of the 'htt
 Then, run the below, which will pick the first mirror from mirrors.ubuntu.com/mirrors.txt, inject it and start packer:
 
 ```bash
-./start_iso_to_ovf.sh
+./start_iso_to_ovf.sh precise|trusty|xenial|bionic
 ```
+
+(Ensure you pick a single OS version as the single argument specified above)
 
 The result of the above will be a directory called output-virtualbox-iso/ containing a .ovf and .vmdk file.
 
@@ -61,3 +63,7 @@ You can modify the versions specified at the top of start_iso_to_ovf.sh to build
 If you modify scripts/ubuntu_box_setup.sh you can add any custom logic to the existing shell provisioner at the bottom.
 
 Alternatively you can modify ubuntu_ovf_to_box_template.json and add extra provisioners to build your box.
+
+# Credits
+
+[Jeff Geerling](https://github.com/geerlingguy/packer-ubuntu-1804) implemented a good Packer `virtualbox-iso` template for Ubuntu 18.04 which was partially used here.

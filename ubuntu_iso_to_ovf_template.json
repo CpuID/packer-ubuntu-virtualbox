@@ -2,7 +2,7 @@
   "builders": [
     {
       "boot_command": "BOOTCOMMAND",
-      "boot_wait": "4s",
+      "boot_wait": "BOOTWAIT",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "guest_os_type": "Ubuntu_64",
       "hard_drive_interface": "sata",
@@ -10,7 +10,7 @@
       "headless": true,
       "http_directory": "http",
       "iso_checksum": "ISO_CHECKSUM",
-      "iso_checksum_type": "sha1",
+      "iso_checksum_type": "sha256",
       "iso_url": "ISO_URL",
       "shutdown_command": "echo 'shutdown -P now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
       "ssh_password": "vagrant",

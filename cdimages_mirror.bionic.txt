@@ -1,0 +1,1 @@
+http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/

@@ -1,5 +1,6 @@
 /cdimages_mirror.txt
 /cdimages_SHA1SUMS
+/cdimages_SHA256SUMS
 /mirrors.txt
 /http/preseed.cfg
 /ubuntu_iso_to_ovf.json

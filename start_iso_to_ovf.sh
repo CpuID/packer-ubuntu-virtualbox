@@ -12,24 +12,34 @@ ubuntu_mirror=""
 
 set -e
 
+# default boot wait of 4 seconds (all except bionic)
+bootwait="4s"
+#
 case $1 in
 "precise"*)
     ubuntu_version_full="12.04.5"
-    ubuntu_version_short="12.04"
+    ubuntu_version_short="12.04/"
     ubuntu_version_codename="precise"
   ;;
 "trusty"*)
     ubuntu_version_full="14.04.5"
-    ubuntu_version_short="14.04"
+    ubuntu_version_short="14.04/"
     ubuntu_version_codename="trusty"
   ;;
 "xenial"*)
-    ubuntu_version_full="16.04.3"
-    ubuntu_version_short="16.04"
+    ubuntu_version_full="16.04.4"
+    ubuntu_version_short="16.04/"
     ubuntu_version_codename="xenial"
   ;;
+"bionic"*)
+    ubuntu_version_full="18.04"
+    # Not relevant for bionic due to way URLs are structured below
+    ubuntu_version_short=""
+    ubuntu_version_codename="bionic"
+    bootwait="10s"
+  ;;
   *)
-    echo "usage: $0 [precise|trusty|xenial]"
+    echo "usage: $0 [precise|trusty|xenial|bionic]"
     exit 1
   ;;
 esac
@@ -37,24 +47,36 @@ esac
 
 echo "Started at $(date)"
 
-if [ ! -f "cdimages_mirror.txt" ]; then
-	echo "You must create a file called 'cdimages_mirror.txt' in this directory, with a mirror from:"
-	echo "https://launchpad.net/ubuntu/+cdmirrors"
-	echo "The file should contain a single line, of the URI of the 'http' link next to any mirror on the page above."
-	echo "Include the trailing slash, example:"
-	echo "http://mirror.internode.on.net/pub/ubuntu/releases/"
-	exit 1
+if [ "$1" == "bionic" ]; then
+  cdimages_mirror_file="cdimages_mirror.bionic.txt"
+  if [ ! -f "$cdimages_mirror_file" ]; then
+    echo "Error: '${cdimages_mirror_file}' file does not exist? Should be part of the repo...."
+    exit 1
+  fi
+  echo "Using 'cdimages_mirror.bionic.txt' due to needing alternate installer on 18.04 / Bionic (standard mirrors only include live installer CDs)"
+  echo "See https://wiki.ubuntu.com/BionicBeaver/ReleaseNotes#Server_installer for more details"
+else
+  cdimages_mirror_file="cdimages_mirror.txt"
+  if [ ! -f "$cdimages_mirror_file" ]; then
+	  echo "You must create a file called '${cdimages_mirror_file}' in this directory, with a mirror from:"
+	  echo "https://launchpad.net/ubuntu/+cdmirrors"
+	  echo "The file should contain a single line, of the URI of the 'http' link next to any mirror on the page above."
+	  echo "Include the trailing slash, example:"
+	  echo "http://mirror.internode.on.net/pub/ubuntu/releases/"
+	  exit 1
+  fi
 fi
-ubuntu_cd_mirror=$(cat "cdimages_mirror.txt")
+
+ubuntu_cd_mirror=$(cat "$cdimages_mirror_file")
 cd_mirror_proto="$(echo $ubuntu_cd_mirror | grep :// | sed -e's,^\(.*://\).*,\1,g')"
 if [[ "$cd_mirror_proto" != "http://" && "$cd_mirror_proto" != "https://" ]]; then
-	echo "Error - Invalid format for 'cdimages_mirror.txt' file, it must contain a single line"
+	echo "Error - Invalid format for '${cdimages_mirror_file}' file, it must contain a single line"
 	echo "with a URL prefix, example:"
 	echo "http://mirror.internode.on.net/pub/ubuntu/releases/"
 	exit 1
 fi
 
-# Pick a mirror, if none has already ben specified.
+# Pick a mirror, if none has already ben specified for package retrievals during installation.
 if [ -z "$ubuntu_mirror" ]; then
 	echo "Fetching mirror from Ubuntu site."
 	wget -q -O mirrors.txt "http://mirrors.ubuntu.com/mirrors.txt"
@@ -95,15 +117,22 @@ perl -pi -e "s|MIRROR_SUITE|${ubuntu_version_codename}|g" scripts/ubuntu_ovf_set
 # ISO URL.
 cp ubuntu_iso_to_ovf_template.json ubuntu_iso_to_ovf.json
 ubuntu_iso_filename="ubuntu-${ubuntu_version_full}-server-amd64.iso"
-perl -pi -e "s|ISO_URL|${ubuntu_cd_mirror}${ubuntu_version_short}/${ubuntu_iso_filename}|g" ubuntu_iso_to_ovf.json
+perl -pi -e "s|ISO_URL|${ubuntu_cd_mirror}${ubuntu_version_short}${ubuntu_iso_filename}|g" ubuntu_iso_to_ovf.json
 bootcommand=$(cat scripts/${ubuntu_version_codename}.boot_command)
 perl -pi -e "s|BOOTCOMMAND|${bootcommand}|g" ubuntu_iso_to_ovf.json
+perl -pi -e "s|BOOTWAIT|${bootwait}|g" ubuntu_iso_to_ovf.json
 perl -pi -e "s|UBUNTU_VERSION_FULL|${ubuntu_version_full}|g" ubuntu_iso_to_ovf.json
 
 # ISO Checksum. Use an upstream trusted source rather than a mirror for this part.
-sha1sums_filename="cdimages_SHA1SUMS"
-wget -q -O "${sha1sums_filename}" "http://releases.ubuntu.com/${ubuntu_version_short}/SHA1SUMS"
-iso_checksum_value=$(grep "${ubuntu_iso_filename}" "${sha1sums_filename}" | cut -d" " -f1)
+shasums_filename="cdimages_SHA256SUMS"
+if [ "$ubuntu_version_codename" == "bionic" ]; then
+  # alternate installer comes from a specific mirror, SHA checksums for it not in releases.ubuntu.com list which sucks a little...
+  shasums_url="${ubuntu_cd_mirror}SHA256SUMS"
+else
+  shasums_url="http://releases.ubuntu.com/${ubuntu_version_short}SHA256SUMS"
+fi
+wget -O "${shasums_filename}" "$shasums_url"
+iso_checksum_value=$(grep "${ubuntu_iso_filename}" "${shasums_filename}" | cut -d" " -f1)
 perl -pi -e "s|ISO_CHECKSUM|${iso_checksum_value}|g" ubuntu_iso_to_ovf.json
 
 # Delete existing packer output directory, otherwise packer fails.
